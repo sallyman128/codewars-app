@@ -1,6 +1,5 @@
 import requests
 from models import db, Language
-from app import app
 
 def fetch_data_from_codewars():
     api_url = "https://www.codewars.com/api/v1/users/sallyman128"
@@ -20,11 +19,8 @@ def insert_data_into_db(languages):
         db.session.add(l)
     db.session.commit()
 
-if __name__ == '__main__':
-    with app.app_context():
-        # Fetch data from API
-        api_data = fetch_data_from_codewars()
-
-        if api_data:
+def add_daily_data_from_codewars():
+    api_data = fetch_data_from_codewars()
+    if api_data:
             # Insert data into the database
             insert_data_into_db(api_data['ranks']['languages'])
