@@ -1,34 +1,34 @@
 services:
-  collector_flask_app:
+  collector:
     build:
-      context: .
+      context: ./collector
     ports:
       - 5000:5000
     environment:
-      - POSTGRES_PASSWORD=mysecretpassword
+      - DATABASE_URL=postgresql://pstgr_user:pstgr_pass@codewars_db:5432/codewars_db
     depends_on:
       codewars_db:
         condition: service_healthy
+  analyzer:
+    build:
+      context: ./analyzer
+    ports:
+      - 5001:5001
+  display:
+    build:
+      context: ./display
+    ports:
+      - 3000:3000
   codewars_db:
-    image: postgres
-    restart: always
-    user: postgres
-    secrets:
-      - db-password
-    volumes:
-      - db-data:/var/lib/postgresql/data
+    build: ./db
+    ports: 
+      - 5432:5432
     environment:
-      - POSTGRES_DB=example
-      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
-    expose:
-      - 5432
+      - POSTGRES_USER=pstgr_user
+      - POSTGRES_PASSWORD=pstgr_pass
+      - POSTGRES_DB=codewars_db
     healthcheck:
       test: [ "CMD", "pg_isready" ]
       interval: 10s
       timeout: 5s
       retries: 5
-volumes:
-  db-data:
-secrets:
-  db-password:
-    file: db/password.txt
