@@ -6,7 +6,4 @@ app = Flask(__name__)
 
 @app.route("/")
 def main():
-    return 'Analyzer is working'
-
-if __name__ == "__main__":
-    app.run(port=3000)
+    return 'Display is working'
