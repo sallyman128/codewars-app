@@ -1,30 +1,45 @@
+import json
 from flask import Flask
-from models import db
-from flask_migrate import Migrate
-from fetch_data import add_daily_data_from_codewars
-from sqlalchemy import inspect, create_engine
-from sqlalchemy_utils import database_exists, create_database
+import psycopg2
 import os
 
-engine = create_engine(os.environ.get('DATABASE_URL'))
-if not database_exists(engine.url):
-    create_database(engine.url)
-
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+password = os.environ['POSTGRES_PASSWORD']
 
-db.init_app(app)
-migrate = Migrate(app, db)
 
-def does_table_exist():
-    inspector = inspect(db.engine)
-    return inspector.has_table("language")
+@app.route('/')
+def hello_world():
+    return 'Hello, Docker!'
 
-with app.app_context():
-    # Fetch daily data from API
-    if does_table_exist(): add_daily_data_from_codewars()
 
-## NOTE just for testing the service... delete in the end...
-@app.route("/") 
-def index(): 
-    return "Collector is working"
+@app.route('/widgets')
+def get_widgets():
+    with psycopg2.connect(host="db", user="postgres", password=password, database="codewars_db") as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT * FROM widgets")
+            row_headers = [x[0] for x in cur.description]
+            results = cur.fetchall()
+    conn.close()
+
+    json_data = [dict(zip(row_headers, result)) for result in results]
+    return json.dumps(json_data)
+
+
+# @app.route('/initdb')
+def db_init():
+    conn = psycopg2.connect(host="db", user="postgres", password=password)
+    conn.set_session(autocommit=True)
+    with conn.cursor() as cur:
+        cur.execute("DROP DATABASE IF EXISTS codewars_db")
+        cur.execute("CREATE DATABASE codewars_db")
+    conn.close()
+
+    with psycopg2.connect(host="db", user="postgres", password=password, database="codewars_db") as conn:
+        with conn.cursor() as cur:
+            cur.execute("DROP TABLE IF EXISTS widgets")
+            cur.execute("CREATE TABLE widgets (name VARCHAR(255), description VARCHAR(255))")
+    conn.close()
+
+    return 'init database'
+
+db_init()

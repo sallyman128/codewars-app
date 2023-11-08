@@ -1,7 +1,7 @@
 services:
-  collector:
+  server:
     build:
-      context: ./collector
+      context: .
     ports:
       - 5000:5000
     environment:
@@ -9,16 +9,10 @@ services:
     depends_on:
       db:
         condition: service_healthy
-  analyzer:
-    build:
-      context: ./analyzer
-    ports:
-      - 5001:5001
-  display:
-    build:
-      context: ./display
-    ports:
-      - 3000:3000
+    develop:
+      watch:
+        - action: rebuild
+          path: .
   db:
     image: postgres
     restart: always
@@ -28,7 +22,7 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=codewars_db
+      - POSTGRES_DB=example
       - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
     expose:
       - 5432
