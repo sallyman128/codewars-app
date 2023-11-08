@@ -43,7 +43,7 @@ USER appuser
 COPY . .
 
 # Expose the port that the application listens on.
-EXPOSE 5000
+EXPOSE 3000
 
 # Run the application.
-CMD python3 -m flask run --host=0.0.0.0
+CMD python3 -m flask run --host=0.0.0.0 --port=3000
