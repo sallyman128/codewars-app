@@ -1,0 +1,11 @@
+{
+    "python.linting.pylintArgs": [
+        "--disable=unresolved-import"
+    ],
+    "python.linting.flake8Args": [
+        "--ignore=E402"
+    ],
+    "python.analysis.disabled": [
+        "unresolved-import"
+    ]
+}
