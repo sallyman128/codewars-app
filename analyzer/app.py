@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, abort
 from models.analytics import Analytics
 import requests
 import json
@@ -25,7 +25,7 @@ def fetchCodewars():
         analytics = Analytics(name, leaderboardPosition, language_scores, topLanguage)
         return json.dumps(analytics.to_dict())
     else:
-        return "Error fetching data from Codewars"
+        return abort(400, "Invalid username")
 
 def fetch_data_from_codewars(username):
     api_url = f'https://www.codewars.com/api/v1/users/{username}'
