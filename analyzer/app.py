@@ -2,8 +2,10 @@ from flask import Flask
 from models.analytics import Analytics
 import requests
 import json
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 
 @app.route('/')
 def hello_world():
@@ -11,7 +13,7 @@ def hello_world():
 
 @app.route('/fetchcodewars')
 def fetchCodewars():
-    username = "sallyman128"
+    username = request.args.get('username')
     api_data = fetch_data_from_codewars(username)
 
     if api_data:
@@ -35,6 +37,3 @@ def fetch_data_from_codewars(username):
     else:
         print("Error: No response from codewars")
         return None
-
-# if __name__ == '__main__':
-#     app.run(host='0.0.0.0', port=5001, debug=True)
