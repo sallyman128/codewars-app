@@ -10,4 +10,4 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 COPY . .
 
-CMD celery -A database worker --loglevel=info
+CMD celery -A app worker --loglevel=info

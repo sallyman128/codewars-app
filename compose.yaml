@@ -37,7 +37,7 @@ services:
     environment:
       POSTGRES_DB: codewars_db
       POSTGRES_USER: usr
-      POSTGRES_PASSWORD_FILE: pswd
+      POSTGRES_PASSWORD: pswd
     ports:
       - "5432:5432"
     healthcheck:
