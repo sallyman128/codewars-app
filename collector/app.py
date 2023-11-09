@@ -10,7 +10,7 @@ password = os.environ['POSTGRES_PASSWORD']
 
 @app.route('/')
 def hello_world():
-    return 'Hello, Docker!'
+    return 'Collector working!'
 
 def add_languages():
     api_data = fetch_data_from_codewars()
