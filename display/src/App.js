@@ -3,20 +3,35 @@ import { useState } from "react";
 function App() {
   const [username, setUsername] = useState("");
   const [analytics, setAnalytics] = useState();
+  const [error, setError] = useState();
 
   const updateUsername = (e) => {
     setUsername(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setAnalytics({
-      data: [
-        { language: "ruby", color: "red", rank: 12 },
-        { language: "java", color: "green", rank: 3 },
-      ],
-    });
+    try {
+      const apiData = await fetchAnalytics(username)
+      if (apiData) {
+        setAnalytics(apiData);
+      } else {
+        console.error("Error fetching data from Analyzer");
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error)
+    }
   };
+
+  const fetchAnalytics = async (username) => {
+    const url = `http://localhost:5001/fetchcodewars?username=${username}`
+    const resp = await fetch(url)
+    if (resp.ok) {
+      return resp.json()
+    } else {
+      throw new Error(`Error: ${resp.status}`)
+    }
+  }
 
   return (
     <div className="App">
@@ -29,13 +44,11 @@ function App() {
       </div>
 
       <div>
-        {analytics?.data ? (
+        {analytics?.language_scores ? (
           <ul>
-            {analytics.data.map((item, index) => (
+            {Object.entries(analytics.language_scores).map(([lang, score], index) => (
               <li key={index}>
-                <strong>Language:</strong> {item.language},{" "}
-                <strong>Color:</strong> {item.color}, <strong>Rank:</strong>{" "}
-                {item.rank}
+                <strong>Language:</strong> {lang}, <strong>Score:</strong> {score}
               </li>
             ))}
           </ul>
