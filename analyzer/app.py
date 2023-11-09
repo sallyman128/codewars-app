@@ -17,10 +17,10 @@ def fetchCodewars():
     if api_data:
         name = api_data['name']
         leaderboardPosition = api_data['leaderboardPosition']
-        languages = api_data['ranks']['languages']
-        topLanguage = max(languages, key=lambda lang: languages[lang]["score"])
+        language_scores = {language: details["score"] for language, details in api_data['ranks']['languages'].items()}
+        topLanguage = max(language_scores, key=lambda lang: language_scores[lang])
 
-        analytics = Analytics(name, leaderboardPosition, languages, topLanguage)
+        analytics = Analytics(name, leaderboardPosition, language_scores, topLanguage)
         return json.dumps(analytics.to_dict())
     else:
         return "Error fetching data from Codewars"
