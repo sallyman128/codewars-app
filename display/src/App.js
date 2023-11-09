@@ -3,7 +3,7 @@ import { useState } from "react";
 function App() {
   const [username, setUsername] = useState("");
   const [analytics, setAnalytics] = useState();
-  const [error, setError] = useState();
+  const [error, setError] = useState("");
 
   const updateUsername = (e) => {
     setUsername(e.target.value);
@@ -11,15 +11,18 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setAnalytics({})
     try {
       const apiData = await fetchAnalytics(username)
       if (apiData) {
         setAnalytics(apiData);
+        setError("")
       } else {
         console.error("Error fetching data from Analyzer");
       }
     } catch (error) {
       console.error("Error fetching data:", error)
+      setError("Invalid Username")
     }
   };
 
@@ -41,6 +44,12 @@ function App() {
           <input type="text" onChange={updateUsername} />
           <button type="submit">Submit</button>
         </form>
+      </div>
+
+      <div>
+        {error ? (
+          <p className="error">{error}</p>
+        ) : null}
       </div>
 
       <div>
