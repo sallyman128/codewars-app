@@ -1,15 +1,17 @@
 version: '3'
+
 services:
-  # collector:
-  #   build:
-  #     context: ./collector
-  #   ports:
-  #     - 5000:5000
-  #   environment:
-  #     - POSTGRES_PASSWORD=mysecretpassword
-  #   depends_on:
-  #     db:
-  #       condition: service_healthy
+  database:
+    build:
+      context: ./database
+    ports:
+      - 5000:5000
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+    depends_on:
+      - rabbitmq
+      - postgres
+
   analyzer:
     build:
       context: ./analyzer
@@ -17,40 +19,41 @@ services:
       - 5001:5001
     restart: unless-stopped
     volumes: ['./analyzer:/app']
+    depends_on:
+      - rabbitmq
+
   display:
     build:
       context: ./display
     ports:
       - 3000:3000
     restart: unless-stopped
-  # db:
-  #   image: postgres
-  #   restart: always
-  #   user: postgres
-  #   secrets:
-  #     - db-password
-  #   volumes:
-  #     - db-data:/var/lib/postgresql/data
-  #   environment:
-  #     - POSTGRES_DB=codewars_db
-  #     - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
-  #   expose:
-  #     - 5432
-  #   healthcheck:
-  #     test: [ "CMD", "pg_isready" ]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 5
-#   rabbitmq:
-#     image: "rabbitmq:management"
-#     ports:
-#       - "5672:5672"
-#       - "15672:15672"
-#     environment:
-#       RABBITMQ_DEFAULT_USER: guest
-#       RABBITMQ_DEFAULT_PASS: guest
-# volumes:
-#   db-data:
-# secrets:
-#   db-password:
-#     file: db/password.txt
+
+  postgres:
+    image: postgres:latest
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: codewars_db
+      POSTGRES_USER: usr
+      POSTGRES_PASSWORD_FILE: pswd
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: "rabbitmq:3.9-management"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+volumes:
+  postgres_data:
