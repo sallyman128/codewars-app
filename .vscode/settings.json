@@ -1,14 +1,6 @@
 {
-    "python.linting.pylintArgs": [
-        "--disable=unresolved-import"
-    ],
-    "python.linting.flake8Args": [
-        "--ignore=E402"
-    ],
-    "python.analysis.disabled": [
-        "unresolved-import"
-    ],
     "python.analysis.diagnosticSeverityOverrides": {
-        "reportMissingImports": "none"
+        "reportMissingImports": "none",
+        "reportMissingModuleSource": "none"
     }
 }
