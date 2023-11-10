@@ -1,5 +1,16 @@
 # Codewars App
 
+## System Requirements
+This applications requires installations of Python3.11.4, npm, and postgres. The individual packages to be installed are listed in the requirements.txt and package.json files.
+
+Alternatively, running this application in Docker will download all the necessary dependencies within the docker container, requiring no local installations.
+
+## Design Decisions
+- React was decided to be used for the frontend application because of it's swift ability to manage changes to the DOM.
+- Flask was used for the backend applications becuase of it's lightweight requirements. Given the simplicity of the application, the lightweight feature of Flask was sufficient.
+- RabbitMq was used for the messaging service between the backend applications.
+- A SQL Postgres database was decided upon because of the structured data that was expected.
+
 ## About
 This app starts with an HTTP request from the display app. A user can enter their codewars username and will be returned with a list of coding languages that they use on the codewars platform, as well as, their score for each language.
 
