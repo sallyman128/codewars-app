@@ -18,3 +18,5 @@ The **analyzer** app will fetch the data from the codewars API, do some data cle
 The **analyzer** app will also publish a task to the rabbit mq broker that will be consumed by the **database** app.
 
 The **database** app will take the task from analyzer that consist of an event. And it will save the event to the postgres database.
+
+You can access the docker postgres db from the CLI using the following command in the root director. `docker exec -it postgres-container-ID psql -U usr -d codewars_db`. Just enter the postgres-container-id. You can find this by running: `docker ps`.
