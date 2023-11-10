@@ -1,5 +1,5 @@
 from flask import Flask, request, abort
-from models.analytics import Analytics
+from app.models.analytics import Analytics
 import requests
 import json
 from flask_cors import CORS
