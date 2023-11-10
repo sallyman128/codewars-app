@@ -54,13 +54,17 @@ function App() {
 
       <div>
         {analytics?.language_scores ? (
-          <ul>
-            {Object.entries(analytics.language_scores).map(([lang, score], index) => (
-              <li key={index}>
-                <strong>Language:</strong> {lang}, <strong>Score:</strong> {score}
-              </li>
-            ))}
-          </ul>
+          <>
+            <h1>Hi {analytics.name} : {analytics.leaderboardPosition}</h1>
+            <ul>
+              {Object.entries(analytics.language_scores).map(([lang, score], index) => (
+                <li key={index}>
+                  <strong>Language:</strong> {lang}, <strong>Score:</strong> {score}
+                </li>
+              ))}
+            </ul>
+            <p>Your strongest language is: {analytics.topLanguage}</p>
+          </>
         ) : null}
       </div>
     </div>
