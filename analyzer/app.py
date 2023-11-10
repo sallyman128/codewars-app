@@ -4,6 +4,7 @@ import requests
 import json
 from flask_cors import CORS
 from celery import Celery
+import logging
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -14,6 +15,10 @@ RABBITMQ_QUEUE = 'events'
 
 # Celery configuration
 celery = Celery(__name__, broker=RABBITMQ_BROKER)
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 @celery.task
 def publishEvent(event):
@@ -43,12 +48,17 @@ def fetchCodewars():
         json_analytics = json.dumps(analytics.to_dict())
 
         event_response_sent = {"eventType": "RESPONSE_SENT", "payload": json_analytics}
-        publishEvent.apply_async(args=[event_response_sent])
+        publishEvent.apply_async(args=[event_response_sent])  
+        
+        # Log success
+        logger.info('Event produced: %s', event_response_sent)
 
         return json_analytics
     else:
         event_invalid_username = {"eventType": "INVALID_USERNAME", "payload": None}
         publishEvent.apply_async(args=[event_invalid_username])
+        # Log failure
+        logger.info('Event produced: %s', event_invalid_username)
         return abort(400, "Invalid username")
 
 def fetch_data_from_codewars(username):
