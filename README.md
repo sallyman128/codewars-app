@@ -1,9 +1,19 @@
 # Codewars App
 
 ## System Requirements
-This applications requires installations of Python3.11.4, npm, and postgres. The individual packages to be installed are listed in the requirements.txt and package.json files.
-
-Alternatively, running this application in Docker will download all the necessary dependencies within the docker container, requiring no local installations.
+1. CPU:
+ - A multi-core processor is recommended. A quad-core processor or higher is a good starting point.
+2. RAM:
+ - At least 8GB of RAM is recommended.
+3. Disk Space:
+ - Ensure you have enough disk space for Docker images, containers, and the data generated.
+ - Docker images and containers can accumulate, so having several tens of gigabytes available is advisable.
+4. Operating System:
+ - Docker runs on Linux, macOS, and Windows. Make sure your host OS is one of these.
+5. Docker Desktop:
+ - Install Docker Desktop if you're using Windows or macOS. On Linux, install Docker Engine and Docker Compose separately.
+6. Network Bandwidth:
+ - Ensure you have sufficient network bandwidth.
 
 ## Design Decisions
 - React was decided to be used for the frontend application because of it's swift ability to manage changes to the DOM.
