@@ -11,40 +11,38 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setAnalytics({})
+    setAnalytics({});
     try {
-      const apiData = await fetchAnalytics(username)
+      const apiData = await fetchAnalytics(username);
       if (apiData) {
         setAnalytics(apiData);
-        setError("")
+        setError("");
       } else {
         console.error("Error fetching data from Analyzer");
       }
     } catch (error) {
-      console.error("Error fetching data:", error)
-      setError("Invalid Username")
+      console.error("Error fetching data:", error);
+      setError("Invalid Username");
     }
   };
 
   const fetchAnalytics = async (username) => {
-    const url = `http://localhost:5001/fetchcodewars?username=${username}`
-    const resp = await fetch(url)
+    const url = `http://localhost:5001/fetchcodewars?username=${username}`;
+    const resp = await fetch(url);
     if (resp.ok) {
-      return resp.json()
+      return resp.json();
     } else {
-      throw new Error(`Error: ${resp.status}`)
+      throw new Error(`Error: ${resp.status}`);
     }
-  }
+  };
 
   return (
-    <div className="App">
-      <div>
-        <form onSubmit={handleSubmit}>
-          <label>Enter Codewars Username: </label>
-          <input type="text" onChange={updateUsername} />
-          <button type="submit">Submit</button>
-        </form>
-      </div>
+    <div className="container">
+      <form onSubmit={handleSubmit}>
+        <label>Enter Codewars Username: </label>
+        <input type="text" onChange={updateUsername} />
+        <button type="submit">Submit</button>
+      </form>
 
       <div>
         {error ? (
